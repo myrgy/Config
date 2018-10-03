@@ -73,13 +73,14 @@
   ;; https://github.com/maskray/ccls/blob/master/src/config.h
   (setq
    ccls-extra-init-params
-   `(:clang (:pathMappings ,+ccls-path-mappings)
+   `(:clang (:extraArgs ["--gcc-toolchain=/usr"]
+             :pathMappings ,+ccls-path-mappings)
             :completion
             (:include
              (:blacklist
-              ("^/usr/(local/)?include/c\\+\\+/[0-9\\.]+/(bits|tr1|tr2|profile|ext|debug)/"
+              ["^/usr/(local/)?include/c\\+\\+/[0-9\\.]+/(bits|tr1|tr2|profile|ext|debug)/"
                "^/usr/(local/)?include/c\\+\\+/v1/"
-               )))
+               ]))
             :index (:initialBlacklist ,+ccls-initial-blacklist :trackDependency 1)))
 
   (with-eval-after-load 'projectile

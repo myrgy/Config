@@ -6,6 +6,27 @@
 
 (setq doom-scratch-buffer-major-mode 'emacs-lisp-mode)
 
+(use-package atomic-chrome
+  :ensure t
+  :defer 5                              ; since the entry of this
+                                        ; package is from Chrome
+  :config
+  (setq atomic-chrome-url-major-mode-alist
+        '(("github\\.com"        . gfm-mode)
+          ("emacs-china\\.org"   . gfm-mode)
+          ("stackexchange\\.com" . gfm-mode)
+          ("stackoverflow\\.com" . gfm-mode)))
+
+  (defun +my/atomic-chrome-mode-setup ()
+    (setq header-line-format
+          (substitute-command-keys
+           "Edit Chrome text area.  Finish \
+`\\[atomic-chrome-close-current-buffer]'.")))
+
+  (add-hook 'atomic-chrome-edit-mode-hook #'+my/atomic-chrome-mode-setup)
+
+  (atomic-chrome-start-server))
+
 (def-package! avy
   :commands (avy-goto-char-timer)
   :init
@@ -349,6 +370,9 @@
   ("^\\*info.*" :size 80 :size right)
   ("^\\*Man.*" :size 80 :side right)
   ))
+
+;; TODO workaround emacsclient -nw a.cc
+(advice-add #'+doom-dashboard|make-frame :override #'ignore)
 
 (let ((profile "~/.config/doom/profile.el"))
   (when (file-exists-p profile)
